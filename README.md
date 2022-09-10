@@ -1,8 +1,8 @@
 <p align="center">
 <a href="https://codecov.io/gh/ubinatus/diamond-diff"><img src="https://codecov.io/gh/ubinatus/diamond-diff/branch/main/graph/badge.svg?token=NGBO197H7Y"/></a>
 <a href="https://github.com/ubinatus/diamond-diff/actions/workflows/test.yml"><img src="https://github.com/ubinatus/diamond-diff/actions/workflows/test.yml/badge.svg?branch=main&event=push" alt="diamond-diff CI status" /></a>
-<a href="https://twitter.com/ubinatus" rel="nofollow"><img src="https://img.shields.io/badge/created%20by-@ubinatus-4BBAAB.svg" alt="Created by JA"></a>
 <a href="https://opensource.org/licenses/MIT" rel="nofollow"><img src="https://img.shields.io/github/license/ubinatus/diamond-diff" alt="License"></a>
+</p>
 
 # diamond-diff
 
