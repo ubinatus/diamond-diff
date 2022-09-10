@@ -55,6 +55,20 @@ function ensureDiamondFacets(
       }
     });
   });
+  // Validating that current facets addresses are unique
+  currentFacets.reduce((addreses: string[], facet, i) => {
+    const foundIdx = addreses.indexOf(facet.facetAddress);
+    if (foundIdx > -1) {
+      errors.push({
+        path: `currentFacets: ${i}.facetAddress`,
+        message: "Facet addresese must be unique",
+        type: "duplicate-facetAddress",
+      });
+    } else {
+      addreses.push(facet.facetAddress);
+    }
+    return addreses;
+  }, []);
   // Validating that current facets selectors are unique
   currentFacets.reduce((selectors: string[], facet, i) => {
     facet.functionSelectors.forEach((selector, j) => {
@@ -107,8 +121,22 @@ function ensureDiamondFacets(
       }
     });
   });
+  // Validating that model facets addresses are unique
+  modelFacets.reduce((addreses: string[], facet, i) => {
+    const foundIdx = addreses.indexOf(facet.facetAddress);
+    if (foundIdx > -1) {
+      errors.push({
+        path: `modelFacets: ${i}.facetAddress`,
+        message: "Facet addresese must be unique",
+        type: "duplicate-facetAddress",
+      });
+    } else {
+      addreses.push(facet.facetAddress);
+    }
+    return addreses;
+  }, []);
   // Validating that model facets selectors are unique
-   modelFacets.reduce((selectors: string[], facet, i) => {
+  modelFacets.reduce((selectors: string[], facet, i) => {
     facet.functionSelectors.forEach((selector, j) => {
       const foundIdx = selectors.indexOf(selector);
       if (foundIdx > -1) {
@@ -157,7 +185,9 @@ function ensureDiamondFacets(
     } else {
       // Model's selecter with new facet -> To be replaced
       const foundCutIdx = desiredCut.findIndex(
-        (x) => x.facetAddress === modelRoutes[selector]
+        (x) =>
+          x.facetAddress === modelRoutes[selector] &&
+          x.action === FacetCutAction.Replace
       );
       if (foundCutIdx > -1) {
         desiredCut[foundCutIdx].functionSelectors.push(selector);
@@ -177,7 +207,9 @@ function ensureDiamondFacets(
     if (!currentRoutes[selector]) {
       // Current doesn't have this selector -> To be added
       const foundCutIdx = desiredCut.findIndex(
-        (x) => x.facetAddress === modelRoutes[selector]
+        (x) =>
+          x.facetAddress === modelRoutes[selector] &&
+          x.action === FacetCutAction.Add
       );
       if (foundCutIdx > -1) {
         desiredCut[foundCutIdx].functionSelectors.push(selector);
