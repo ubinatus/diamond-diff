@@ -1,0 +1,60 @@
+{
+  "name": "diamond-diff",
+  "version": "1.0.0",
+  "description": "Diamond (EIP-2535) tool to compare facets.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "test": "jest --config jestconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "git add -A src",
+    "postversion": "git push && git push --tags",
+    "check-updates": "npx npm-check-updates",
+    "check-updates:minor": "npx npm-check-updates --target minor",
+    "check-updates:patch": "npx npm-check-updates --target patch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ubinatus/diamond-diff.git"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "keywords": [
+    "typescript",
+    "npm",
+    "template",
+    "ts",
+    "diamond",
+    "multi-facet proxy",
+    "eip-2535"
+  ],
+  "author": "JA (https://twitter.com/ubinatus)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ubinatus/diamond-diff/issues"
+  },
+  "homepage": "https://github.com/ubinatus/diamond-diff#readme",
+  "devDependencies": {
+    "@ethersproject/address": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^18.7.8",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "ansi-regex": ">=6.0.1",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "jest": "^29.0.2",
+    "ts-jest": "^29.0.0",
+    "typescript": "^4.7.4"
+  }
+}
