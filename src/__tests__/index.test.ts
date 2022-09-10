@@ -28,6 +28,26 @@ describe("Arguments validator", () => {
     facetAddress: "notAddress",
     functionSelectors: ["0xf2fde38b"],
   };
+  const facetsWithDuplicatedAddress = [
+    {
+      facetAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      functionSelectors: ["0xcacacaca", "0xcbcbcb"],
+    },
+    {
+      facetAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      functionSelectors: ["0xdadadada", "0xdbdbdbdb"],
+    },
+  ];
+  const facetsWithDuplicatedSelectors = [
+    {
+      facetAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      functionSelectors: ["0xcacacaca", "0xcbcbcb"],
+    },
+    {
+      facetAddress: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      functionSelectors: ["0xcacacaca", "0xdbdbdbdb"],
+    },
+  ];
 
   it("check current facets with empty address", () => {
     expect(() =>
@@ -55,7 +75,14 @@ describe("Arguments validator", () => {
     ).toThrowError();
   });
   it("check current facets with unique selectors", () => {
-    expect(() => ensureDiamondFacets([valid, valid], [valid])).toThrowError();
+    expect(() =>
+      ensureDiamondFacets(facetsWithDuplicatedSelectors, [valid])
+    ).toThrowError();
+  });
+  it("check current unique facets", () => {
+    expect(() =>
+      ensureDiamondFacets(facetsWithDuplicatedAddress, [valid])
+    ).toThrowError();
   });
 
   it("check model facets with empty address", () => {
@@ -85,6 +112,16 @@ describe("Arguments validator", () => {
   });
   it("check model facets with unique selectors", () => {
     expect(() => ensureDiamondFacets([valid], [valid, valid])).toThrowError();
+  });
+  it("check model facets with unique selectors", () => {
+    expect(() =>
+      ensureDiamondFacets([valid],facetsWithDuplicatedSelectors)
+    ).toThrowError();
+  });
+  it("check model unique facets", () => {
+    expect(() =>
+      ensureDiamondFacets([valid],facetsWithDuplicatedAddress)
+    ).toThrowError();
   });
 });
 
@@ -304,7 +341,6 @@ describe("Desired cut", () => {
       },
     ];
     const diamondCut = ensureDiamondFacets(current, model);
-    console.log(diamondCut);
     expect(diamondCut).toEqual(
       expect.arrayContaining([
         {
