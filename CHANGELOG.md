@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ubinatus/diamond-diff/compare/v1.0.2...v1.0.3) (2022-09-10)
+
+
+### Bug Fixes
+
+* ci ([eafa510](https://github.com/ubinatus/diamond-diff/commit/eafa5102f9826adc9c3f7c56baf92ba7a2999bcb))
+
 ## [1.0.2](https://github.com/ubinatus/diamond-diff/compare/v1.0.1...v1.0.2) (2022-09-10)
 
 
