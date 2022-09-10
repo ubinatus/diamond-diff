@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/ubinatus/diamond-diff/compare/v1.0.3...v1.0.4) (2022-09-10)
+
+
+### Miscellaneous Chores
+
+* release 1.0.4 ([b2d2e5b](https://github.com/ubinatus/diamond-diff/commit/b2d2e5b81c8149bc4de3bb463e147a07c75217be))
+
 ## [1.0.3](https://github.com/ubinatus/diamond-diff/compare/v1.0.2...v1.0.3) (2022-09-10)
 
 
