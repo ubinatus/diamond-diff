@@ -1,7 +1,5 @@
 import { FacetCutAction, FacetCutStruct, FacetStruct } from "./types";
-import { AddressZero } from "./utils";
-import { isAddress } from "@ethersproject/address";
-import { isBytesLike } from "@ethersproject/bytes";
+import { AddressZero, validateFacets } from "./utils";
 
 /**
  * Compares two sets of facets in order to retrieve the actions needed to fit a desired facets output
@@ -14,143 +12,11 @@ function ensureDiamondFacets(
   modelFacets: FacetStruct[]
 ) {
   // VALIDATION
-  const errors: {
-    path: string;
-    message: string;
-    type: string;
-  }[] = [];
   // Validating the current facets
-  currentFacets.forEach((facet, i) => {
-    // Validating the facet address
-    if (!isAddress(facet.facetAddress)) {
-      errors.push({
-        path: `currentFacets: ${i}.facetAddress`,
-        message: "`facetAddress` is invalid",
-        type: "invalid-address",
-      });
-    } else if (facet.facetAddress === AddressZero) {
-      errors.push({
-        path: `currentFacets: ${i}.facetAddress`,
-        message: "`facetAddress` is zero address",
-        type: "zero-address",
-      });
-    }
-    if (facet.functionSelectors.length === 0) {
-      // Validating the function selectors
-      // Checking if array is not empty
-      errors.push({
-        path: `currentFacets: ${i}.functionSelectors`,
-        message: "`functionSelectors` cannot be an empty array",
-        type: "empty-functionSelectors",
-      });
-    }
-    // Checking if array contains valid bytes4
-    facet.functionSelectors.forEach((fs, j) => {
-      if (!isBytesLike(fs)) {
-        errors.push({
-          path: `currentFacets: ${i}.functionSelectors.${j}`,
-          message: "Each function selector must be bytes like",
-          type: "invalid-functionSelector",
-        });
-      }
-    });
-  });
-  // Validating that current facets addresses are unique
-  currentFacets.reduce((addreses: string[], facet, i) => {
-    const foundIdx = addreses.indexOf(facet.facetAddress);
-    if (foundIdx > -1) {
-      errors.push({
-        path: `currentFacets: ${i}.facetAddress`,
-        message: "Facet addresese must be unique",
-        type: "duplicate-facetAddress",
-      });
-    } else {
-      addreses.push(facet.facetAddress);
-    }
-    return addreses;
-  }, []);
-  // Validating that current facets selectors are unique
-  currentFacets.reduce((selectors: string[], facet, i) => {
-    facet.functionSelectors.forEach((selector, j) => {
-      const foundIdx = selectors.indexOf(selector);
-      if (foundIdx > -1) {
-        errors.push({
-          path: `currentFacets: ${i}.functionSelectors.${j}`,
-          message: "Facets must have unique function selectors",
-          type: "duplicate-functionSelector",
-        });
-      } else {
-        selectors.push(selector);
-      }
-    });
-    return selectors;
-  }, []);
+  const currentFacetsError = validateFacets(currentFacets);
   // Validating the model facets
-  modelFacets.forEach((facet, i) => {
-    // Validating the facet address
-    if (!isAddress(facet.facetAddress)) {
-      errors.push({
-        path: `currentFacets: ${i}.facetAddress`,
-        message: "`facetAddress` is invalid",
-        type: "invalid-address",
-      });
-    } else if (facet.facetAddress === AddressZero) {
-      errors.push({
-        path: `currentFacets: ${i}.facetAddress`,
-        message: "`facetAddress` is zero address",
-        type: "zero-address",
-      });
-    }
-    if (facet.functionSelectors.length === 0) {
-      // Validating the function selectors
-      // Checking if array is not empty
-      errors.push({
-        path: `currentFacets: ${i}.functionSelectors`,
-        message: "`functionSelectors` cannot be an empty array",
-        type: "empty-functionSelectors",
-      });
-    }
-    // Checking if array contains valid bytes4
-    facet.functionSelectors.forEach((fs, j) => {
-      if (!isBytesLike(fs)) {
-        errors.push({
-          path: `currentFacets: ${i}.functionSelectors.${j}`,
-          message: "Each function selector must be bytes like",
-          type: "invalid-functionSelector",
-        });
-      }
-    });
-  });
-  // Validating that model facets addresses are unique
-  modelFacets.reduce((addreses: string[], facet, i) => {
-    const foundIdx = addreses.indexOf(facet.facetAddress);
-    if (foundIdx > -1) {
-      errors.push({
-        path: `modelFacets: ${i}.facetAddress`,
-        message: "Facet addresese must be unique",
-        type: "duplicate-facetAddress",
-      });
-    } else {
-      addreses.push(facet.facetAddress);
-    }
-    return addreses;
-  }, []);
-  // Validating that model facets selectors are unique
-  modelFacets.reduce((selectors: string[], facet, i) => {
-    facet.functionSelectors.forEach((selector, j) => {
-      const foundIdx = selectors.indexOf(selector);
-      if (foundIdx > -1) {
-        errors.push({
-          path: `modelFacets: ${i}.functionSelectors.${j}`,
-          message: "Facets must have unique function selectors",
-          type: "duplicate-functionSelector",
-        });
-      } else {
-        selectors.push(selector);
-      }
-    });
-    return selectors;
-  }, []);
+  const modelFacetsError = validateFacets(modelFacets, true);
+  const errors = currentFacetsError.concat(modelFacetsError);
   if (errors.length > 0) {
     throw errors;
   }
