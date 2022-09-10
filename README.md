@@ -11,7 +11,7 @@ The Diamond Pattern, or [EIP-2535](https://eips.ethereum.org/EIPS/eip-2535), is 
 
 ## When to use
 
-An example of when to use this tool is if you have a factory of Upgradeable Diamonds which needs to follow a model. `diamond-diff` will help you check which diamonds are not ~up-to-date~ (doesn't have the same functions as desired) and let you know what's the needed `diamondCut` so that every existing (deployed) Diamond follows the Model Diamond.
+An example of when to use this tool is if you have a factory of Upgradeable Diamonds which needs to follow a model. `diamond-diff` will help you check which diamonds are not up-to-date (doesn't have the same functions as desired) and let you know what's the needed `diamondCut` so that every existing (deployed) Diamond follows the Model Diamond.
 
 ## Installation
 
@@ -30,7 +30,8 @@ yarn add diamond-diff
 ```ts
 import { ensureDiamondFacets, diamondEquals } from "diamond-diff";
 
-// Facets can be retrieved with the `DiamondLoupeFacet` by calling the `facets()` method
+// Facets can be retrieved with the `DiamondLoupeFacet`
+// by calling the its `facets()` method
 
 const currentDiamondFacets = [
   {
