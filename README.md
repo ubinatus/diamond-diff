@@ -85,7 +85,7 @@ console.log(diamondCut);
 //   },
 //   {
 //     facetAddress: 0x0000000000000000000000000000000000000000,
-//     action: 1, // <- Remove
+//     action: 2, // <- Remove
 //     functionSelectors: ["0x52ef6b2c"],
 //   },
 // ];
