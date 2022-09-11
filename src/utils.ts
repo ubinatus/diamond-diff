@@ -6,6 +6,23 @@ import { isBytesLike } from "@ethersproject/bytes";
 export const AddressZero = "0x0000000000000000000000000000000000000000";
 
 /**
+ * Creates the routing of the Diamond function selectors to facets
+ * @param facets Facets struct (retrieved from the `facets()` function in the `DiamondLouperFacet`)
+ * @returns Diamond functionSelectors to facetAddress routes
+ */
+export function getDiamondRoutes(facets: FacetStruct[]) {
+  const routes: { [key: string]: string } = {};
+  // Iterate through the diamond facets
+  for (let i = 0; i < facets.length; i++) {
+    // Iterate through the facet function selectors
+    for (let j = 0; j < facets[i].functionSelectors.length; j++) {
+      routes[facets[i].functionSelectors[j]] = facets[i].facetAddress;
+    }
+  }
+  return routes;
+}
+
+/**
  * Validates the `facets` to:
  * - Have unique facet addresses
  * - Have non-zero valid checksum addresses
