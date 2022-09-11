@@ -53,35 +53,46 @@ describe("Arguments validator", () => {
     expect(() =>
       ensureDiamondFacets([withEmptyAddress], [valid])
     ).toThrowError();
+    expect(() => diamondEquals([withEmptyAddress], [valid])).toThrowError();
   });
   it("check current facets with empty selectors", () => {
     expect(() =>
       ensureDiamondFacets([withEmptySelectors], [valid])
     ).toThrowError();
+    expect(() => diamondEquals([withEmptySelectors], [valid])).toThrowError();
   });
   it("check current facets with invalid selector", () => {
     expect(() =>
       ensureDiamondFacets([withInvalidSelector], [valid])
     ).toThrowError();
+    expect(() => diamondEquals([withInvalidSelector], [valid])).toThrowError();
   });
   it("check current facets with facet as zero address", () => {
     expect(() =>
       ensureDiamondFacets([withFacetZeroAddress], [valid])
     ).toThrowError();
+    expect(() => diamondEquals([withFacetZeroAddress], [valid])).toThrowError();
   });
   it("check current facets with invalid address", () => {
     expect(() =>
       ensureDiamondFacets([withInvalidAddress], [valid])
     ).toThrowError();
+    expect(() => diamondEquals([withInvalidAddress], [valid])).toThrowError();
   });
   it("check current facets with unique selectors", () => {
     expect(() =>
       ensureDiamondFacets(facetsWithDuplicatedSelectors, [valid])
     ).toThrowError();
+    expect(() =>
+      diamondEquals(facetsWithDuplicatedSelectors, [valid])
+    ).toThrowError();
   });
   it("check current unique facets", () => {
     expect(() =>
       ensureDiamondFacets(facetsWithDuplicatedAddress, [valid])
+    ).toThrowError();
+    expect(() =>
+      diamondEquals(facetsWithDuplicatedAddress, [valid])
     ).toThrowError();
   });
 
@@ -89,38 +100,50 @@ describe("Arguments validator", () => {
     expect(() =>
       ensureDiamondFacets([valid], [withEmptyAddress])
     ).toThrowError();
+    expect(() => diamondEquals([valid], [withEmptyAddress])).toThrowError();
   });
   it("check model facets with empty selectors", () => {
     expect(() =>
       ensureDiamondFacets([valid], [withEmptySelectors])
     ).toThrowError();
+    expect(() => diamondEquals([valid], [withEmptySelectors])).toThrowError();
   });
   it("check model facets with invalid selector", () => {
     expect(() =>
       ensureDiamondFacets([valid], [withInvalidSelector])
     ).toThrowError();
+    expect(() => diamondEquals([valid], [withInvalidSelector])).toThrowError();
   });
   it("check model facets with facet as zero address", () => {
     expect(() =>
       ensureDiamondFacets([valid], [withFacetZeroAddress])
     ).toThrowError();
+    expect(() => diamondEquals([valid], [withFacetZeroAddress])).toThrowError();
   });
   it("check model facets with invalid address", () => {
     expect(() =>
       ensureDiamondFacets([valid], [withInvalidAddress])
     ).toThrowError();
+    expect(() => diamondEquals([valid], [withInvalidAddress])).toThrowError();
   });
   it("check model facets with unique selectors", () => {
     expect(() => ensureDiamondFacets([valid], [valid, valid])).toThrowError();
+    expect(() => diamondEquals([valid], [valid, valid])).toThrowError();
   });
   it("check model facets with unique selectors", () => {
     expect(() =>
-      ensureDiamondFacets([valid],facetsWithDuplicatedSelectors)
+      ensureDiamondFacets([valid], facetsWithDuplicatedSelectors)
+    ).toThrowError();
+    expect(() =>
+      diamondEquals([valid], facetsWithDuplicatedSelectors)
     ).toThrowError();
   });
   it("check model unique facets", () => {
     expect(() =>
-      ensureDiamondFacets([valid],facetsWithDuplicatedAddress)
+      ensureDiamondFacets([valid], facetsWithDuplicatedAddress)
+    ).toThrowError();
+    expect(() =>
+      diamondEquals([valid], facetsWithDuplicatedAddress)
     ).toThrowError();
   });
 });
@@ -385,6 +408,24 @@ describe("Desired cut", () => {
 });
 
 describe("Equal diamonds", () => {
+  it("compares two diamonds with more selectors", () => {
+    expect(
+      diamondEquals(
+        [
+          {
+            facetAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+            functionSelectors: ["0xfafafafa", "0xfbfbfbfb"],
+          },
+        ],
+        [
+          {
+            facetAddress: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+            functionSelectors: ["0xfafafafa", "0xfbfbfbfb", "0xfcfcfcfc"],
+          },
+        ]
+      )
+    ).toBeFalsy;
+  });
   it("compares two diamonds with different selectors", () => {
     expect(
       diamondEquals(
