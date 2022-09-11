@@ -1,5 +1,5 @@
 import { FacetCutAction, FacetCutStruct, FacetStruct } from "./types";
-import { AddressZero, validateFacets } from "./utils";
+import { AddressZero, getDiamondRoutes, validateFacets } from "./utils";
 
 /**
  * Compares two sets of facets in order to retrieve the actions needed to fit a desired facets output
@@ -25,24 +25,11 @@ function ensureDiamondFacets(
   const desiredCut: FacetCutStruct[] = [];
 
   // 2) Create routes mapping
-  const currentRoutes: { [key: string]: string } = {};
-  for (let i = 0; i < currentFacets.length; i++) {
-    for (let j = 0; j < currentFacets[i].functionSelectors.length; j++) {
-      currentRoutes[currentFacets[i].functionSelectors[j]] =
-        currentFacets[i].facetAddress;
-    }
-  }
-  const modelRoutes: { [key: string]: string } = {};
-  for (let i = 0; i < modelFacets.length; i++) {
-    for (let j = 0; j < modelFacets[i].functionSelectors.length; j++) {
-      modelRoutes[modelFacets[i].functionSelectors[j]] =
-        modelFacets[i].facetAddress;
-    }
-  }
-
-  const selectorsToRemove: string[] = [];
+  const currentRoutes = getDiamondRoutes(currentFacets);
+  const modelRoutes = getDiamondRoutes(modelFacets);
 
   // 3) Check currentRoutes against modelRoutes
+  const selectorsToRemove: string[] = [];
   for (const [selector] of Object.entries(currentRoutes)) {
     if (currentRoutes[selector] == modelRoutes[selector]) continue;
     if (!modelRoutes[selector]) {
@@ -98,7 +85,7 @@ function ensureDiamondFacets(
     });
   }
 
-  // 5) Return expected cut to enforce model facets
+  // 6) Return expected cut to enforce model facets
   return desiredCut;
 }
 /**
@@ -111,7 +98,36 @@ function diamondEquals(
   currentFacets: FacetStruct[],
   modelFacets: FacetStruct[]
 ) {
-  return ensureDiamondFacets(currentFacets, modelFacets).length === 0;
+  // VALIDATION
+  // Validating the current facets
+  const currentFacetsError = validateFacets(currentFacets);
+  // Validating the model facets
+  const modelFacetsError = validateFacets(modelFacets, true);
+  const errors = currentFacetsError.concat(modelFacetsError);
+  if (errors.length > 0) {
+    throw errors;
+  }
+
+  // 1) Create routes mapping
+  const currentRoutes = getDiamondRoutes(currentFacets);
+  const modelRoutes = getDiamondRoutes(modelFacets);
+
+  // 2) Check currentRoutes against modelRoutes
+  for (const [selector] of Object.entries(currentRoutes)) {
+    if (currentRoutes[selector] == modelRoutes[selector]) continue;
+    // selector was removed or its facet address was changed -> Not equal
+    return false;
+  }
+
+  // 3) Check modelRoutes against currentRoutes
+  for (const [selector] of Object.entries(modelRoutes)) {
+    if (modelRoutes[selector] == currentRoutes[selector]) continue;
+    // selector was removed or its facet address was changed -> Not equal
+    return false;
+  }
+
+  // 4) If we went here it's because diamonds are equal
+  return true;
 }
 
 export { ensureDiamondFacets, diamondEquals };
