@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.11](https://github.com/ubinatus/diamond-diff/compare/v1.0.10...v1.0.11) (2022-09-11)
+
+
+### Performance Improvements
+
+* **diamondequals:** removes diamondCut logic from facet iterations ([f55b05b](https://github.com/ubinatus/diamond-diff/commit/f55b05b73b3fcff0377fcfce173b882c44cde913))
+
 ## [1.0.10](https://github.com/ubinatus/diamond-diff/compare/v1.0.9...v1.0.10) (2022-09-11)
 
 
