@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ubinatus/diamond-diff/compare/v1.0.11...v1.1.0) (2023-08-09)
+
+
+### Features
+
+* **ci:** upgrade actions ([48555f0](https://github.com/ubinatus/diamond-diff/commit/48555f0a7bc0b24ffa97482a64f4da51be296d7f))
+
 ## [1.0.11](https://github.com/ubinatus/diamond-diff/compare/v1.0.10...v1.0.11) (2022-09-11)
 
 
